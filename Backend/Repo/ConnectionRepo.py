@@ -5,23 +5,9 @@ import urllib
 
 import json
 
-class Base(DeclarativeBase):
-    pass
-
-
-class EmailAddress(Base):
-    __tablename__ = "EmailAddress"
-    __table_args__ = {"schema": "Person"}
-
-    EmailAddressId: Mapped[int] = mapped_column(Integer, primary_key=True)
-    EmailAddress: Mapped[str] = mapped_column(String(100), nullable=False)
-
-    '''def __repr__(self) -> str:
-        return f"User(id={self.id!r}, username={self.username!r}, email={self.email!r})"'''
-
 class ConnectionRepo:
 
-    def __init__(self):
+    def connecttoSQLServer(self):
         with open("Repo/config.json", "r", encoding="utf-8") as file:
             config = json.load(file)
 
@@ -36,10 +22,6 @@ class ConnectionRepo:
         quoted_conn_str = urllib.parse.quote_plus(odbc_str)
         print("out")
         engine = create_engine(f"mssql+pyodbc:///?odbc_connect={quoted_conn_str}")   
-
+        return engine
     
-        with Session(engine) as session:
-            stmt = select(EmailAddress)
-            fetched_user = session.scalars(stmt).first()
-            print("Fetched from DB:", fetched_user)
-
+       
